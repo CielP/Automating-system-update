@@ -1,0 +1,48 @@
+FROM phusion/baseimage:0.9.22
+
+MOUNT /var/cache/docker-homecache:/root/.cache
+MOUNT /var/cache/docker-apt:/var/cache/apt
+MOUNT /var/cache/docker-apt-lib:/var/lib/apt
+RUN sed -i -e 's/archive.ubuntu.com/free.nchc.org.tw/' /etc/apt/sources.list
+ADD internal/apt.sh /usr/bin/
+
+
+# Python
+RUN apt.sh install python
+RUN curl --silent --show-error --retry 5 https://bootstrap.pypa.io/get-pip.py | python
+RUN pip install -U setuptools
+RUN easy_install distribute
+
+# Deploy requirements.txt
+RUN apt.sh install libjpeg8-dev gcc python-dev libssl-dev swig 
+ADD v1/requirements.txt /opt/project-python/requirements.txt
+RUN pip install -r /opt/project-python/requirements.txt
+
+# Ruby
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt.sh install git-core curl zlib1g-dev build-essential libssl-dev \
+  libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev \
+  libcurl4-openssl-dev python-software-properties libffi-dev nodejs yarn
+RUN git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+RUN echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+ENV PATH /root/.rbenv/bin:$PATH
+RUN git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+RUN echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
+ENV PATH $HOME/.rbenv/plugins/ruby-build/bin:$PATH
+RUN rbenv install 2.4.3
+RUN rbenv global 2.4.3
+RUN bash -i -c "gem install bundler"
+
+# Deploy Gemfile
+WORKDIR /opt/project-ruby/
+RUN apt.sh install libmagickwand-dev
+ADD v1/Gemfile /opt/project-ruby/Gemfile
+RUN bash -i -c "bundle lock"
+RUN bash -i -c "bundle install --deployment"
+RUN bash -i -c "bundle pack"
+WORKDIR /
+
+
+PUSH jcppkkk/automating-system-update

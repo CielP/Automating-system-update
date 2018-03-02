@@ -15,14 +15,19 @@ You have a product runs in Ubuntu 16.04, which runs in a on-site vm and does not
 To update this product, we want to generate a offline update pack.
 
 Given following data:
-1. A Docker image to emulate the product vm, which contains two projects
+1. A Docker image to emulate the product VM environment, `docker pull jcppkkk/automating-system-update`
+  which contains the two projects. Their dependences are installed on system.
   ~~~
-  /opt/project-python/requirements.txt
-  /opt/project-ruby/Gemfile
+  /opt/project-python
+  /opt/project-ruby
   ~~~
 2. New requirement files `requirements.txt` & `Gemfile`
+  ~~~
+  v2/requirements.txt
+  v2/Gemfile
+  ~~~
 
-We want to update following things with a update pack **without Internet access**:
+We want to update the product with a update pack:
 1. For Ubuntu system: perform the security updates.
 2. For Python project:
   - Update `requirements.txt`
@@ -31,16 +36,23 @@ We want to update following things with a update pack **without Internet access*
   - Update `Gemfile`
   - Update ruby gems required by `Gemfile`.
 
-Please implement a method that can automatically generate the update pack.
-  - The implementation can be shell/python/ruby script, any frameworks or any other way that works.
-  - The generated update pack should be able to execute on the server. like:
-    - Single file: update.{sh,py,rb}
-    - A folder: update_files/update.{sh,py,rb}
-    - Any other format that runs
+The update pack should be able to execute on the server.
+The structure of update pack is not limited, like:
+  - Single file: update.{sh,py,rb}
+  - A folder: update_files/update.{sh,py,rb}
+  - Any other format that can runs
+
+You can answer this question in different levels:
+Level 1: A update pack that can update the product with Internet.
+Level 2: A update pack that can update the product without Internet.
+Level 3: A script(in any kind) that can generate the update pack unattended.
+Level 4: Integrated your work with a online CI service(gitlab-ci, Travis, circleci, Buddy...etc) to auto generate update pack on push.
+Level 5: Auto test your update pack in CI flow.
 
 You need to provide:
-- Works on github or other git service that can trace your development history.
-- describe your works w/wo demo(in minutes) during interview.
+- A git repo(archive or online repo) that can let us review your development history.
+- Describe your work w/wo demo(in minutes) during interview, Internet available.
 
 # Notes
-- Keep in mind that you may not have enough time to finish all requirements, but it's fine, just keep your answer works (partially)
+- Keep your answer works from time to time.
+- You may not have enough time to fully complete this test, but it's fine. What is important is how you do it.
