@@ -1,22 +1,22 @@
 Automating system update
 ===
 # Description
-You have a product runs in Ubuntu 16.04, which runs in a on-site vm and **does not have Internet access**. The product has two projects, they are written in python and Ruby on Rails.
+You have a product runs in Ubuntu 16.04, which runs in a on-site vm and **does not have Internet access**. The product has two projects, they are written in python and Ruby on Rails
+
+To update this product, we want to generate a **offline** update pack
 
 ## The Python project:
   - located at `/opt/project-python`
-  - has a Requirements file `requirements.txt` under the path.
+  - has a Requirements file `requirements.txt` under the path
 
 ## The Ruby project:
 - located at `/opt/project-ruby`
-- has a Requirements files `Gemfile` under the path.
+- has a Requirements files `Gemfile` under the path
 
-# Question
-To update this product, we want to generate a **offline** update pack.
-
+# Input
 Given following data:
 1. A Docker image to emulate the product VM environment, `docker pull jcppkkk/automating-system-update`
-  which contains the two projects. Their dependences are installed on system.
+  which contains the two projects. Their dependences are installed on system
   ~~~
   /opt/project-python
   /opt/project-ruby
@@ -28,8 +28,11 @@ Given following data:
   v2/Gemfile
   ~~~
 
+# Output
+
+## Things to Update
 We want to update the product with a update pack that can update the product **without Internet**:
-1. For Ubuntu system: perform the security updates, as same as running `unattended-upgrade` on system.
+1. For Ubuntu system: perform the security updates, as same as running `unattended-upgrade` on system
   ~~~
   root@15066d60c1f2:/# unattended-upgrade --dry-run -v
   Initial blacklisted packages: 
@@ -42,30 +45,27 @@ We want to update the product with a update pack that can update the product **w
 
 2. For Python project:
   - Update `requirements.txt`
-  - Update python packages required by `requirements.txt`.
+  - Update python packages required by `requirements.txt`
 
 3. For Ruby project:
   - Update `Gemfile`
-  - Update ruby gems required by `Gemfile`.
+  - Update ruby gems required by `Gemfile`
 
-- The update pack should be able to execute on the server.
-- The update pack need no be as small as possiable, maximum 500MB.
-- The structure of update pack is not limited, like:
-  - Single file: update.{sh,py,rb}
-  - A folder: update_files/update.{sh,py,rb}
-  - Any other format that can runs
+## Requirement of Update Pack 
+- The update pack should be able to execute on the server
+- The size of update pack needs to be as small as possible, maximum 500MB
 
-You can answer this question in different levels(choose a level to complete, higher level is better):
-- Level 1: Manually prepare (A) -- A update pack that can update the product with Internet.
-- Level 2: Manually prepare (B) -- A update pack that can update the product **without Internet**.
+## Your Answer
+Answer this question in the level you are able to implement, higher level is better:
+- Level 1: Manually prepare (A) -- A update pack that can update the product with Internet
+- Level 2: Manually prepare (B) -- A update pack that can update the product **without Internet**
 - Level 3: Write (C) -- A script(in any type) that can generate (B) with lastest updates(the update list and update packages needs to be fetched on the fly)
-- Level 4: Setup auto build (D) -- auto run (C) to generate (B) after commit pushed with a online CI service(gitlab-ci, Travis, circleci, Buddy...etc).
-- Level 5: Setup auto test (E) -- after (D), auto test that (B) can be applied in docker image correctly **without Internet** after commit pushed, **try to isolate Internat access of the docker container under test** when apply (B).
+- Level 4: Setup auto build (D) -- auto run (C) to generate (B) after commit pushed with a online CI service(gitlab-ci, Travis, circleci, Buddy...etc)
+- Level 5: Setup auto test (E) -- after (D), auto test that (B) can be applied in docker image correctly **without Internet** after commit pushed, **try to isolate Internat access of the docker container under test** when apply (B)
 
 You need to provide:
-- A git repo(archive or online repo) that can let us review your development history.
-- Describe your work w/wo demo(in minutes) during interview, Internet available.
-
-# Notes
-- Keep your answer works from time to time.
-- You may not have enough time to fully complete this test, but it's fine. What is important is how you do it.
+- A git repo to track your development history
+  - Write meaningful git commit messages so we can review them. https://chris.beams.io/posts/git-commit/
+- Describe your work w/wo demo(with google chrome chromcast casting) during interview
+  - Use google chrome's casting
+  - Internet are available
