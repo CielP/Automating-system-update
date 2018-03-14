@@ -44,11 +44,11 @@ We want to update the product with a update pack that can update the product **w
   - Any other format that can runs
 
 You can answer this question in different levels(choose a level to complete, higher level is better):
-- Level 1: Manually prepare (A) -- a update pack that can update the product with Internet.
+- Level 1: Manually prepare (A) -- A update pack that can update the product with Internet.
 - Level 2: Manually prepare (B) -- A update pack that can update the product **without Internet**.
 - Level 3: Write (C) -- A script(in any type) that can generate (B)
 - Level 4: Setup auto build (D) -- auto run (C) to generate (B) after commit pushed with a online CI service(gitlab-ci, Travis, circleci, Buddy...etc).
-- Level 5: Setup auto test (E) -- after (D), auto test that (B) can be applied in docker image correctly after commit pushed, **try to isolate Internat access** during the test.
+- Level 5: Setup auto test (E) -- after (D), auto test that (B) can be applied in docker image correctly **without Internet** after commit pushed, **try to isolate Internat access of the docker container under test** when apply (B).
 
 You need to provide:
 - A git repo(archive or online repo) that can let us review your development history.
