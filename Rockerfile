@@ -45,4 +45,6 @@ RUN bash -i -c "bundle pack"
 WORKDIR /
 
 
+RUN apt.sh install unattended-upgrades
+
 PUSH jcppkkk/automating-system-update
