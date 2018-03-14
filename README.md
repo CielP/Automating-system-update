@@ -57,15 +57,26 @@ We want to update the product with a update pack that can update the product **w
 
 ## Your Answer
 Answer this question in the level you are able to implement, higher level is better:
-- Level 1: Manually prepare (A) -- A update pack that can update the product with Internet
-- Level 2: Manually prepare (B) -- A update pack that can update the product **without Internet**
-- Level 3: Write (C) -- A script(in any type) that can generate (B) with lastest updates(the update list and update packages needs to be fetched on the fly)
-- Level 4: Setup auto build (D) -- auto run (C) to generate (B) after commit pushed with a online CI service(gitlab-ci, Travis, circleci, Buddy...etc)
-- Level 5: Setup auto test (E) -- after (D), auto test that (B) can be applied in docker image correctly **without Internet** after commit pushed, **try to isolate Internat access of the docker container under test** when apply (B)
 
-You need to provide:
-- A git repo to track your development history
-  - Write meaningful git commit messages so we can review them. https://chris.beams.io/posts/git-commit/
-- Describe your work w/wo demo(with google chrome chromcast casting) during interview
-  - Use google chrome's casting
-  - Internet are available
+- Levels
+  - Level 1: Manually prepare (A)
+  - Level 2: Manually prepare (B)
+  - Level 3: Write (C)
+  - Level 4: Auto build -- (C)+(D)
+  - Level 5: Auto build & test -- (C)+(D)+(E)
+
+- Objectives
+  - (A) A update pack that can update the product with Internet
+  - (B) A update pack that can update the product **without Internet**
+  - (C) A script(in any type) that can generate (B) with lastest updates
+    - the update list and update packages needs to be fetched on the fly)
+  - (D) Auto generate (B) with (C) after commit pushed
+    - Develop with a online CI service(gitlab-ci, Travis, circleci, Buddy...etc)
+  - (E) Auto test that (B) can be applied in docker image correctly after commit pushed
+    - **try to isolate Internat access of the docker container under test** when apply (B)
+- You need to provide:
+  - A git repo to track your development history
+    - Write meaningful git commit messages so we can review them. https://chris.beams.io/posts/git-commit/
+  - Describe your work w/wo demo(with google chrome chromcast casting) during interview
+    - Use google chrome's casting
+    - Internet are available
