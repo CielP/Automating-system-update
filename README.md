@@ -16,6 +16,7 @@ To update the product, we want to generate a update pack, so customer can update
 ## Things to Update
 We want to update the product with a update pack that can update the product **without Internet**:
 1. For Ubuntu system: perform the security updates, as same as running `unattended-upgrade` on system.
+  (This is a example list of what packages unattended-upgrade would update, this command does not actually update system packages)
   ~~~
   root@15066d60c1f2:/# unattended-upgrade --dry-run -v
   Initial blacklisted packages: 
@@ -64,12 +65,11 @@ Answer this question in the level you are able to implement, higher level is bet
   - (B) A update pack that can update the product **without Internet**
     - The size of update pack needs to be as small as possible, maximum 500MB
     - The update pack should be able to execute on the server
-  - (C) A script that can generate (B) with lastest updates
-    - For security updates, the update content need to be fresh (which can update system packages to the time it generated)
-    - e.g. If (B) is generated at 2018/03/14, it should contains following updates: `ca-certificates libasn1-8-heimdal libc-bin libdb5.3 libgcrypt20 libgnutls30 libgssapi3-heimdal libhcrypto4-heimdal libheimbase1-heimdal libheimntlm0-heimdal libhx509-5-heimdal libidn11 libkrb5-26-heimdal libldap-2.4-2 libpam-doc libpython3.5-minimal libpython3.5-stdlib libroken18-heimdal libsystemd0 libtasn1-6 libudev1 libwind0-heimdal locales multiarch-support openssh-client openssh-server openssh-sftp-server openssl python3.5 python3.5-minimal sensible-utils systemd systemd-sysv`
-  - (D) Auto generate (B) with (C) after commit pushed
+  - (C) A script that can fetch all latest contents to generate (B)
+    - (C) always generate latest update content, even if you execute this script a few months later.
+  - (D) Auto execute (C) after new commit pushed
     - Setup CI with a online CI service (gitlab-ci, Travis, circleci, Buddy...etc)
-  - (E) Auto test that (B) can be applied in docker image correctly after commit pushed
+  - (E) Auto test that (B) can be applied in docker image correctly after new commit pushed
     - **Try to isolate Internat access of the docker container under test** when apply (B)
 
 - You need to provide:
