@@ -1,8 +1,7 @@
 Automating system update
 ===
-There is a product runs in Ubuntu 16.04
-- It runs in a vm 
-- It **does not have Internet**
+There is a product that runs in Ubuntu 16.04 VM
+- We have deployed multiple products VM in some various enviroment, some of them **cannot access Internet**
 - The product has two projects, they are written in python and Ruby on Rails
   - The Python project:
     - located at `/opt/project-python`
@@ -11,21 +10,11 @@ There is a product runs in Ubuntu 16.04
     - located at `/opt/project-ruby`
     - has a Requirements files `Gemfile` under the path
     
-To update the product, we want to generate a update pack, so customer can update the system **offline**.
-
 ## Things to Update
-We want to update the product with a update pack that can update the product **without Internet**:
-1. For Ubuntu system: perform the security updates, as same as running `unattended-upgrade` on system.
+We want to update all products on customer site, so we need to generate a **offline** update pack, which is based on a image of previous version of product.
+
+1. For Ubuntu system: runs security updates offline, the result should be identical with running `unattended-upgrade` on system.
   (This is a example list of what packages unattended-upgrade would update, this command does not actually update system packages)
-  ~~~
-  root@15066d60c1f2:/# unattended-upgrade --dry-run -v
-  Initial blacklisted packages: 
-  Initial whitelisted packages: 
-  Starting unattended upgrades script
-  Allowed origins are: ['o=Ubuntu,a=xenial', 'o=Ubuntu,a=xenial-security', 'o=UbuntuESM,a=xenial']
-  Option --dry-run given, *not* performing real actions
-  Packages that will be upgraded: ca-certificates libasn1-8-heimdal libc-bin libdb5.3 libgcrypt20 libgnutls30 libgssapi3-heimdal libhcrypto4-heimdal libheimbase1-heimdal libheimntlm0-heimdal libhx509-5-heimdal libidn11 libkrb5-26-heimdal libldap-2.4-2 libpam-doc libpython3.5-minimal libpython3.5-stdlib libroken18-heimdal libsystemd0 libtasn1-6 libudev1 libwind0-heimdal locales multiarch-support openssh-client openssh-server openssh-sftp-server openssl python3.5 python3.5-minimal sensible-utils systemd systemd-sysv
-  ~~~
 
 2. For Python project:
   - Update `requirements.txt`
@@ -37,18 +26,13 @@ We want to update the product with a update pack that can update the product **w
 
 ## Input
 Given following data:
-1. A Docker image to emulate the product VM environment, `docker pull jcppkkk/automating-system-update`
-  which contains the two projects. Their dependences are installed on system
+1. A Docker image (`docker pull jcppkkk/automating-system-update`) to emulate previous version of product. It contains two projects. Dependent pakcages of these two projects are installed on system.
   ~~~
   /opt/project-python
   /opt/project-ruby
   ~~~
 
-2. New requirement files `requirements.txt` & `Gemfile`
-  ~~~
-  v2/requirements.txt
-  v2/Gemfile
-  ~~~
+2. New requirement files `v2/requirements.txt` & `v2/Gemfile`
 
 ## Output
 Answer this question in the level you are able to implement, higher level is better:
