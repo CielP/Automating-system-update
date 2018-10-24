@@ -11,18 +11,15 @@ There is a product that runs in Ubuntu 16.04 VM
     - has a Requirements files `Gemfile` under the path
     
 ## Things to Update
-We want to update all products on customer site, so we need to generate a **offline** update pack, which is based on a image of previous version of product.
+To update our server(VM) without Internat, we need to generate a **offline** update pack, which is generated based on previous version of the VM image.
 
-1. For Ubuntu system: runs security updates offline, the result should be identical with running `unattended-upgrade` on system.
-  (This is a example list of what packages unattended-upgrade would update, this command does not actually update system packages)
+1. For Ubuntu system: and archive same result as `apt update; apt upgrade` offline.
 
 2. For Python project:
-  - Update `requirements.txt`
-  - Update python packages required by `requirements.txt`
+  - Update `Pipfile.lock` and archive same result as `pipenv sync` offline
 
 3. For Ruby project:
-  - Update `Gemfile`
-  - Update ruby gems required by `Gemfile`
+  - Update `Gemfile` and archive same result as `bundle install` offline
 
 ## Input
 Given following data:
@@ -35,30 +32,19 @@ Given following data:
 2. New requirement files `v2/requirements.txt` & `v2/Gemfile`
 
 ## Output
-Answer this question in the level you are able to implement, higher level is better:
-
-- Levels
-  - Level 1: Manually prepare (A)
-  - Level 2: Manually prepare (B)
-  - Level 3: Write (C)
-  - Level 4: Auto build -- (C)+(D)
-  - Level 5: Auto build & test -- (C)+(D)+(E)
-
-- Objectives
-  - (A) A update pack that can update the product with Internet
-  - (B) A update pack that can update the product **without Internet**
+- Answer Levels
+  - 1.1. A update pack that can update the product with Internet
+  - 1.2. A update pack that can update the product **without Internet**
     - The size of update pack needs to be as small as possible, maximum 500MB
     - The update pack should be able to execute on the server
-  - (C) A script that can fetch all latest contents to generate (B)
-    - (C) always generate latest update content, even if you execute this script a few months later.
-  - (D) Auto execute (C) after new commit pushed
+  - 2. A script that can fetch all latest contents to generate offline update pack
+    - always generate latest update content, even if you execute this script a few months later.
+  - 3.1 Auto generate offline update pack for each new commit
     - Setup CI with a online CI service (gitlab-ci, Travis, circleci, Buddy...etc)
-  - (E) Auto test that (B) can be applied in docker image correctly after new commit pushed
-    - **Try to isolate Internat access of the docker container under test** when apply (B)
-
-- You need to provide:
-  - A git repo to track your development history
-    - Write meaningful git commit messages so we can review them. https://chris.beams.io/posts/git-commit/
-  - Describe your work w/wo demo(with google chrome chromcast casting) during interview
-    - Use google chrome's casting
-    - Internet are available
+  - 3.2 Auto test the offline update pack for each new commit
+    - Ensure the update can be applied offline correctly (**Deny dns,http,https access when apply update** )
+  - 3.3 Auto update image with offline update and push new image
+  
+Answer those levels in order, archive higher level is better. You need to provide:
+- A git repo to track your development history from 1.1 to 3.3
+  - Write git commit messages using commit template https://gist.github.com/zakkak/7e06725ebd1336bfebebe254de3de825
