@@ -1,100 +1,187 @@
 source 'https://rubygems.org'
+# if there is a super emergency and rubygems is playing up, try
+#source 'http://production.cf.rubygems.org'
 
-gem "rails", "3.2.19"
-gem "rake", "~> 10.1.1"
-gem "jquery-rails", "~> 2.0.2"
-gem "coderay", "~> 1.1.0"
-gem "fastercsv", "~> 1.5.0", :platforms => [:mri_18, :mingw_18, :jruby]
-gem "builder", "3.0.0"
+# does not install in linux ATM, so hack this for now
+gem 'bootsnap', require: false
 
-# Optional gem for LDAP authentication
-group :ldap do
-  gem "net-ldap", "~> 0.3.1"
+def rails_master?
+  ENV["RAILS_MASTER"] == '1'
 end
 
-# Optional gem for OpenID authentication
-group :openid do
-  gem "ruby-openid", "~> 2.3.0", :require => "openid"
-  gem "rack-openid"
-end
-
-# Optional gem for exporting the gantt to a PNG file, not supported with jruby
-platforms :mri, :mingw do
-  group :rmagick do
-    # RMagick 2 supports ruby 1.9
-    # RMagick 1 would be fine for ruby 1.8 but Bundler does not support
-    # different requirements for the same gem on different platforms
-    gem "rmagick", ">= 2.0.0"
-  end
-end
-
-platforms :jruby do
-  # jruby-openssl is bundled with JRuby 1.7.0
-  gem "jruby-openssl" if Object.const_defined?(:JRUBY_VERSION) && JRUBY_VERSION < '1.7.0'
-  gem "activerecord-jdbc-adapter", "~> 1.3.2"
-end
-
-# Include database gems for the adapters found in the database
-# configuration file
-require 'erb'
-require 'yaml'
-database_file = File.join(File.dirname(__FILE__), "config/database.yml")
-if File.exist?(database_file)
-  database_config = YAML::load(ERB.new(IO.read(database_file)).result)
-  adapters = database_config.values.map {|c| c['adapter']}.compact.uniq
-  if adapters.any?
-    adapters.each do |adapter|
-      case adapter
-      when 'mysql2'
-        gem "mysql2", "~> 0.3.11", :platforms => [:mri, :mingw]
-        gem "activerecord-jdbcmysql-adapter", :platforms => :jruby
-      when 'mysql'
-        gem "mysql", "~> 2.8.1", :platforms => [:mri, :mingw]
-        gem "activerecord-jdbcmysql-adapter", :platforms => :jruby
-      when /postgresql/
-        gem "pg", ">= 0.11.0", :platforms => [:mri, :mingw]
-        gem "activerecord-jdbcpostgresql-adapter", :platforms => :jruby
-      when /sqlite3/
-        gem "sqlite3", :platforms => [:mri, :mingw]
-        gem "activerecord-jdbcsqlite3-adapter", :platforms => :jruby
-      when /sqlserver/
-        gem "tiny_tds", "~> 0.5.1", :platforms => [:mri, :mingw]
-        gem "activerecord-sqlserver-adapter", :platforms => [:mri, :mingw]
-      else
-        warn("Unknown database adapter `#{adapter}` found in config/database.yml, use Gemfile.local to load your own database gems")
-      end
-    end
-  else
-    warn("No adapter found in config/database.yml, please configure it first")
-  end
+if rails_master?
+  gem 'arel', git: 'https://github.com/rails/arel.git'
+  gem 'rails', git: 'https://github.com/rails/rails.git'
+  gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  warn("Please configure your config/database.yml first")
+  gem 'actionmailer', '~> 5.1'
+  gem 'actionpack', '~> 5.1'
+  gem 'actionview', '~> 5.1'
+  gem 'activemodel', '~> 5.1'
+  gem 'activerecord', '~> 5.1'
+  gem 'activesupport', '~> 5.1'
+  gem 'railties', '~> 5.1'
+  gem 'sprockets-rails'
+  gem 'seed-fu'
 end
 
-group :development do
-  gem "rdoc", ">= 2.4.2"
-  gem "yard"
+gem 'mail'
+gem 'mime-types', require: 'mime/types/columnar'
+gem 'mini_mime'
+gem 'mini_suffix'
+
+gem 'hiredis'
+gem 'redis', require:  ["redis", "redis/connection/hiredis"]
+gem 'redis-namespace'
+
+gem 'active_model_serializers', '~> 0.8.3'
+
+gem 'onebox', '1.8.33'
+
+gem 'http_accept_language', '~>2.0.5', require: false
+
+gem 'ember-rails', '0.18.5'
+gem 'ember-source'
+gem 'ember-handlebars-template', '0.7.5'
+gem 'barber'
+
+gem 'message_bus'
+
+gem 'rails_multisite'
+
+gem 'fast_xs'
+
+gem 'fast_xor'
+
+# Forked until https://github.com/sdsykes/fastimage/pull/93 is merged
+gem 'discourse_fastimage', require: 'fastimage'
+
+gem 'aws-sdk-s3', require: false
+gem 'excon', require: false
+gem 'unf', require: false
+
+gem 'email_reply_trimmer', '0.1.8'
+
+# Forked until https://github.com/toy/image_optim/pull/149 is merged
+gem 'discourse_image_optim', require: 'image_optim'
+gem 'multi_json'
+gem 'mustache'
+gem 'nokogiri'
+
+# this may end up deprecating nokogiri
+gem 'oga', require: false
+
+gem 'omniauth'
+gem 'omniauth-openid'
+gem 'openid-redis-store'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+gem 'omniauth-instagram'
+gem 'omniauth-github'
+
+gem 'omniauth-oauth2', require: false
+
+gem 'omniauth-google-oauth2'
+gem 'oj'
+gem 'pg'
+gem 'pry-rails', require: false
+gem 'r2', '~> 0.2.5', require: false
+gem 'rake'
+
+gem 'thor', require: false
+gem 'rinku'
+gem 'sanitize'
+gem 'sidekiq'
+
+# for sidekiq web
+gem 'tilt', require: false
+
+gem 'execjs', require: false
+gem 'mini_racer'
+gem 'highline', require: false
+gem 'rack-protection' # security
+
+# Gems used only for assets and not required in production environments by default.
+# Allow everywhere for now cause we are allowing asset debugging in production
+group :assets do
+  gem 'uglifier'
+  gem 'rtlit', require: false # for css rtling
 end
 
 group :test do
-  gem "shoulda", "~> 3.3.2"
-  gem "mocha", "~> 1.0.0", :require => 'mocha/api'
-  if RUBY_VERSION >= '1.9.3'
-    gem "capybara", "~> 2.1.0"
-    gem "selenium-webdriver"
-    gem "database_cleaner"
-  end
+  gem 'webmock', require: false
+  gem 'fakeweb', '~> 1.3.0', require: false
+  gem 'minitest', require: false
 end
 
-local_gemfile = File.join(File.dirname(__FILE__), "Gemfile.local")
-if File.exists?(local_gemfile)
-  puts "Loading Gemfile.local ..." if $DEBUG # `ruby -d` or `bundle -v`
-  instance_eval File.read(local_gemfile)
+group :test, :development do
+  gem 'rspec'
+  gem 'mock_redis'
+  gem 'listen', require: false
+  gem 'certified', require: false
+  # later appears to break Fabricate(:topic, category: category)
+  gem 'fabrication', '2.9.8', require: false
+  gem 'discourse-qunit-rails', require: 'qunit-rails'
+  gem 'mocha', require: false
+  gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
+  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
+  gem 'rspec-rails', require: false
+  gem 'shoulda', require: false
+  gem 'rspec-html-matchers'
+  gem 'pry-nav'
+  gem 'byebug', require: ENV['RM_INFO'].nil?
+  gem 'rubocop', require: false
 end
 
-# Load plugins' Gemfiles
-Dir.glob File.expand_path("../plugins/*/Gemfile", __FILE__) do |file|
-  puts "Loading #{file} ..." if $DEBUG # `ruby -d` or `bundle -v`
-  #TODO: switch to "eval_gemfile file" when bundler >= 1.2.0 will be required (rails 4)
-  instance_eval File.read(file), file
+group :development do
+  gem 'ruby-prof', require: false
+  gem 'bullet', require: !!ENV['BULLET']
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'annotate'
+  gem 'foreman', require: false
+end
+
+# this is an optional gem, it provides a high performance replacement
+# to String#blank? a method that is called quite frequently in current
+# ActiveRecord, this may change in the future
+gem 'fast_blank'
+
+# this provides a very efficient lru cache
+gem 'lru_redux'
+
+gem 'htmlentities', require: false
+
+# IMPORTANT: mini profiler monkey patches, so it better be required last
+#  If you want to amend mini profiler to do the monkey patches in the railties
+#  we are open to it. by deferring require to the initializer we can configure discourse installs without it
+
+gem 'flamegraph', require: false
+gem 'rack-mini-profiler', require: false
+
+gem 'unicorn', require: false
+gem 'puma', require: false
+gem 'rbtrace', require: false, platform: :mri
+gem 'gc_tracer', require: false, platform: :mri
+
+# required for feed importing and embedding
+gem 'ruby-readability', require: false
+
+gem 'stackprof', require: false, platform: :mri
+gem 'memory_profiler', require: false, platform: :mri
+
+gem 'cppjieba_rb', require: false
+
+gem 'lograge', require: false
+gem 'logstash-event', require: false
+gem 'logstash-logger', require: false
+gem 'logster'
+
+gem 'sassc', require: false
+
+if ENV["IMPORT"] == "1"
+  gem 'mysql2'
+  gem 'redcarpet'
+  gem 'sqlite3', '~> 1.3.13'
+  gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
 end

@@ -1,5 +1,2 @@
 all:
-	bin/rocker build
-
-push:
-	bin/rocker build --push
+	docker build -t jcppkkk/automating-system-update .
