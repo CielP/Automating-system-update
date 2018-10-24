@@ -31,7 +31,7 @@ Given following data:
       └── .venv
     ```
 
-2. New requirement files under this project `v2/requirements.txt` & `v2/Gemfile`
+2. New requirement files under this project `v2/*`
 
 ## Output
 - Answer those levels in order, archive higher level is better.
